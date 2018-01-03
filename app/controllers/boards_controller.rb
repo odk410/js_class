@@ -62,6 +62,37 @@ class BoardsController < ApplicationController
     end
   end
 
+  def show
+    @like = Like.where(
+      user_id: current_user.id,
+      board_id: params[:id]
+    )
+  end
+
+  def like_board
+    like = Like.where(
+      user_id: current_user.id,
+      board_id: params[:board_id]
+    )
+
+    if like.length > 0
+      #만약에 좋아요를 이미 누른 상태라면
+      like.first.destroy
+      puts '좋아요 취소'
+    else
+      #만약에 처음 좋아요를 누른 상태라면
+      like = Like.create(
+        user_id: current_user.id,
+        board_id: params[:board_id]
+      )
+      puts '좋아요 누름'
+    end
+    redirect_to :back
+  end
+
+  def dislike_board
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_board

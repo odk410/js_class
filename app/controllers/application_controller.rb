@@ -7,7 +7,11 @@ class ApplicationController < ActionController::Base
   def current_user
     # 현재 접속한 유저
     # current_user가 비어 있다면 뒤를 실행하고 비어있지 않다면 그대로 진행한다.
-    @current_user ||= User.find(session[:user_id])
+    # @current_user ||= User.find(session[:user_id])
+    if !session[:user_id].nil?
+      @current_user = User.find(session[:user_id])
+    end
+    @current_user
   end
 
   # ?로 정의 되어 있으면 Boolean으로 return된다.

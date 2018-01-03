@@ -8,5 +8,14 @@
   <%= @board.content %>
 </p>
 
-<%= link_to '수정', edit_board_path(@board), class: 'btn btn-primary' %> 
-<%= link_to '홈으로', boards_path, class: 'btn btn-dark'%>
+<!-- 유저 권한을 검사하여 글쓴이 자기 자신이라면 삭제와 수정 버튼을 보여줌 -->
+<% if user_signed_in? && @board.require_permission?(current_user)%>
+  <%= link_to '<i class="fas fa-trash"></i> 삭제'.html_safe, @board, class: 'btn btn-danger', data: {method: :delete, confirm: 'Are you sure?' } %> |
+  <%= link_to '<i class="fas fa-pencil-alt"></i> 수정'.html_safe, edit_board_path(@board), class: 'btn btn-primary' %> |
+<% end %>
+<% if @like.length > 0 %> <!-- 눌려있을 때 -->
+  <button type="button" class="btn btn-primary like"><i class="far fa-thumbs-up"></i>좋아요(<span id="like-count"><%= @board.likes.count %></span>)</button></a> |
+<%else%> <!-- 처음 누를때 -->
+  <button type="button" class="btn btn-outline-primary like"><i class="far fa-thumbs-up"></i>좋아요(<span id="like-count"><%= @board.likes.length %></span>)</button></a> |
+<%end%>
+<%= link_to '<i class="fas fa-home"></i> 홈으로'.html_safe, boards_path, class: 'btn btn-dark'%>
